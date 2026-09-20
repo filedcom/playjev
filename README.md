@@ -2,7 +2,7 @@
 
 <h1 align="center">PlayJev</h1>
 
-<p align="center"><strong>Stagehand, but with Jev.</strong><br />Browser control with decisions, not generation—a Playwright extension powered by Jev's bounded Score, Choice, and Noul primitives.</p>
+<p align="center"><strong>Stagehand, but with Jev.</strong><br />Natural-language browser automation for Playwright, powered by Jev.</p>
 
 <p align="center">
   <a href="https://github.com/filedcom/playjev/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/filedcom/playjev/actions/workflows/ci.yml/badge.svg" /></a>
@@ -21,19 +21,26 @@
 
 ---
 
-PlayJev is a **new, experimental project** exploring a simple idea: can Jev's bounded decision primitives drive browser automation without asking a generative LLM to invent actions? The API and internals are actively evolving, so expect changes while the approach is tested against broader browser benchmarks.
+## What is PlayJev?
 
-PlayJev keeps the browser automation model simple: **Playwright owns execution; Jev makes bounded decisions.** It compiles a live page into a sparse, numbered YAML tree, asks Jev to rank or choose among real browser nodes, performs an ordinary Playwright operation, and verifies the result against fresh state.
+PlayJev is a TypeScript library for controlling websites with plain-English instructions while keeping the full Playwright API. Give it an existing Playwright page, then ask it to click controls, navigate websites, fill forms, inspect page state, or choose between visible options.
 
-- No raw HTML trees sent to Jev
-- No generated selectors, JavaScript, or arbitrary action JSON
-- No silent LLM fallback
-- Playwright's modern locator, navigation, event, screenshot, and assertion APIs stay available
-- Shadow DOM, cross-origin iframes, styled controls, and multiple tabs covered by public evals
-- Bulk forms use one batched target-selection request and one verification
+If you know Stagehand, the shortest explanation is: **PlayJev is Stagehand, but with Jev making the browser decisions instead of a generative LLM.**
+
+```ts
+await page.act("Open the pricing page");
+await page.act("Complete the contact form", { fields });
+await page.check("Did the form submit successfully?");
+```
 
 > [!IMPORTANT]
-> PlayJev is not production-stable yet. It currently requires Chromium/CDP and access to the TypeSafe Jev API. Review confidence thresholds before using it for destructive or externally visible actions.
+> PlayJev is a new, experimental project—not a production-stable release. The API is actively evolving as it is tested against broader browser benchmarks. It currently requires Chromium/CDP and access to the TypeSafe Jev API.
+
+## See it in action
+
+[![PlayJev running public browser automation evaluations](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo-poster.jpg)](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4)
+
+The silent 48-second recording shows PlayJev running public Browserbase/Stagehand evaluation pages: selecting checkboxes, operating a custom dropdown, filling a cross-origin iframe form, and navigating across multiple pages. [Open the video directly](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4).
 
 ## Try it now
 
@@ -88,6 +95,17 @@ await page.screenshot({ path: "workspace.png" });
 ```
 
 PlayJev's semantic `page.check(question)` replaces Playwright's legacy `page.check(selector)` shorthand. Use `page.locator(selector).check()` for deterministic checkbox interaction.
+
+## Why Jev?
+
+PlayJev keeps the control loop bounded: **Playwright owns execution; Jev makes decisions.** Jev selects from real browser nodes and a fixed operation vocabulary instead of generating selectors, JavaScript, or arbitrary action objects.
+
+- No raw HTML trees sent to Jev
+- No generated selectors, JavaScript, or arbitrary action JSON
+- No silent LLM fallback
+- Playwright locators, navigation, events, screenshots, and assertions stay available
+- Shadow DOM, cross-origin iframes, styled controls, and multiple tabs covered by public evals
+- Bulk forms use one batched target-selection request and one verification
 
 ## Four browser primitives
 
