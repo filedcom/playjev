@@ -110,19 +110,7 @@ jobs:
 
       - name: Publish package to npm
         if: steps.version.outputs.changed == 'true' && steps.state.outputs.published == 'false'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -euo pipefail
-
-          package_name=$(node -p 'require("./package.json").name')
-          if ! npm view "$package_name" name >/dev/null 2>&1 && [ -z "${NODE_AUTH_TOKEN:-}" ]; then
-            echo "The first npm publication requires the NPM_TOKEN repository secret." >&2
-            echo "After the first publish, configure npm trusted publishing for filedcom/playjev and release.yml." >&2
-            exit 1
-          fi
-
-          npm publish --access public --provenance
+        run: npm publish --access public --provenance
 
       - name: Verify npm publication
         if: steps.version.outputs.changed == 'true'
