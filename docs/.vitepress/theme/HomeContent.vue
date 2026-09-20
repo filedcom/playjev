@@ -61,7 +61,7 @@
         <pre
           v-pre
         ><span class="kw">import</span> { chromium } <span class="kw">from</span> <span class="str">"playwright"</span>;
-<span class="kw">import</span> { playjev } <span class="kw">from</span> <span class="str">"playjev"</span>;
+<span class="kw">import</span> { playjev } <span class="kw">from</span> <span class="str">"@filed/playjev"</span>;
 
 <span class="kw">const</span> browser = <span class="kw">await</span> chromium.<span class="fn">launch</span>();
 <span class="kw">const</span> page = <span class="fn">playjev</span>(<span class="kw">await</span> browser.<span class="fn">newPage</span>());

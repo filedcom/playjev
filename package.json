@@ -1,5 +1,5 @@
 {
-  "name": "playjev",
+  "name": "@filed/playjev",
   "version": "0.1.0",
   "type": "module",
   "description": "Fast, typed browser automation powered by Jev and Playwright.",

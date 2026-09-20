@@ -12,7 +12,7 @@ The returned object preserves Playwright's modern page and locator API. PlayJev'
 
 ```ts
 import { chromium } from "playwright";
-import { playjev } from "playjev";
+import { playjev } from "@filed/playjev";
 
 const browser = await chromium.launch();
 const page = playjev(await browser.newPage(), {

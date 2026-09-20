@@ -44,42 +44,36 @@ The silent 48-second recording plays above and shows PlayJev running public Brow
 
 ## Try it now
 
-You need Node.js 20 or newer and a **TypeSafe Jev API key**. Sign in to the [TypeSafe console](https://console.typesafe.ai/login) to get access to Jev, then clone the public repository:
+You need Node.js 20 or newer and a **TypeSafe Jev API key**. Sign in to the [TypeSafe console](https://console.typesafe.ai/login) to get access to Jev, then install PlayJev and Playwright:
+
+```bash
+npm install @filed/playjev playwright
+npx playwright install chromium
+```
+
+Set the required key in your environment:
+
+```bash
+export TYPESAFE_API_KEY="your-key-here"
+```
+
+Then use the Quickstart below. To run the included example from source instead:
 
 ```bash
 git clone https://github.com/filedcom/playjev.git
 cd playjev
 npm install
-npx playwright install chromium
 cp .env.example .env
-```
-
-Open `.env` and set the required key:
-
-```bash
-TYPESAFE_API_KEY=your-key-here
-```
-
-Then run the included example:
-
-```bash
 npm run example
 ```
 
 The example opens `example.com`, asks Jev to identify and follow the explanatory link, and verifies that the destination page loaded.
 
-To use PlayJev as a dependency before the npm release, install it from the public GitHub URL:
-
-```bash
-npm install https://github.com/filedcom/playjev.git playwright
-npx playwright install chromium
-```
-
 ## Quickstart
 
 ```ts
 import { chromium } from "playwright";
-import { playjev } from "playjev";
+import { playjev } from "@filed/playjev";
 
 const browser = await chromium.launch();
 const page = playjev(await browser.newPage());

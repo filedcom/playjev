@@ -11,7 +11,7 @@ PlayJev wraps an existing Playwright `Page`. It does not replace Playwright's br
 ## Install
 
 ```bash
-npm install github:filedcom/playjev playwright
+npm install @filed/playjev playwright
 npx playwright install chromium
 ```
 
@@ -25,7 +25,7 @@ export TYPESAFE_API_KEY="your-key"
 
 ```ts
 import { chromium } from "playwright";
-import { playjev } from "playjev";
+import { playjev } from "@filed/playjev";
 
 const browser = await chromium.launch();
 const page = playjev(await browser.newPage());
