@@ -78,4 +78,29 @@ describe("accessibility snapshots", () => {
 
     expect(actionableNodes(snapshot).map((node) => node.id)).toEqual(["dom:2", "dom:3"]);
   });
+
+  it("includes image alternative text as sparse model context", () => {
+    const snapshot = buildSnapshot("https://example.test", "Result", [
+      {
+        nodeId: "root",
+        backendDOMNodeId: 1,
+        role: { value: "RootWebArea" },
+        childIds: ["result"],
+      },
+      {
+        nodeId: "result",
+        backendDOMNodeId: 2,
+        parentId: "root",
+        role: { value: "image" },
+        name: { value: "11.2" },
+      },
+    ]);
+
+    expect(snapshot.modelTree).toContainEqual({
+      n: 2,
+      parent: 1,
+      type: "image",
+      text: "11.2",
+    });
+  });
 });

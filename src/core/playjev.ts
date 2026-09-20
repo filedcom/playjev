@@ -31,6 +31,7 @@ export class PlayJev {
   readonly page: Page;
   readonly jev: JevClient;
   readonly minTargetConfidence: number;
+  readonly snapshotMaxDepth: number;
 
   constructor(page: Page, options: PlayJevOptions = {}) {
     const apiKey = options.apiKey ?? process.env.TYPESAFE_API_KEY;
@@ -44,10 +45,14 @@ export class PlayJev {
       ...(options.maxRetries === undefined ? {} : { maxRetries: options.maxRetries }),
     });
     this.minTargetConfidence = options.minTargetConfidence ?? 0.55;
+    this.snapshotMaxDepth = options.snapshotMaxDepth ?? 24;
+    if (!Number.isInteger(this.snapshotMaxDepth) || this.snapshotMaxDepth < 1) {
+      throw new Error("snapshotMaxDepth must be a positive integer");
+    }
   }
 
   private snapshot(): Promise<BrowserSnapshot> {
-    return captureSnapshot(this.page);
+    return captureSnapshot(this.page, this.snapshotMaxDepth);
   }
 
   async act(instruction: string, options: ActOptions = {}): Promise<ActResult> {

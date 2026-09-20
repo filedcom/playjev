@@ -138,6 +138,8 @@ export interface PlayJevOptions {
   requestTimeoutMs?: number;
   /** Retries for transient network, 429, and 5xx responses. Defaults to 2. */
   maxRetries?: number;
+  /** Maximum Chromium accessibility-tree depth captured per snapshot. Defaults to 24. */
+  snapshotMaxDepth?: number;
   minTargetConfidence?: number;
 }
 

@@ -60,7 +60,9 @@
     "example:deep-topic:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx examples/research/topic-deep-dive.ts",
     "eval:stagehand": "node --env-file=.env --import tsx evals/stagehand/public-act.ts",
     "eval:stagehand:headed": "HEADED=true node --env-file=.env --import tsx evals/stagehand/public-act.ts",
-    "eval:stagehand:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx evals/stagehand/public-act.ts"
+    "eval:stagehand:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx evals/stagehand/public-act.ts",
+    "eval:webvoyager:golden": "node --env-file=.env --import tsx evals/webvoyager/golden-smoke.ts",
+    "eval:webvoyager:golden:headed": "HEADED=true node --env-file=.env --import tsx evals/webvoyager/golden-smoke.ts"
   },
   "dependencies": {
     "yaml": "^2.8.1"

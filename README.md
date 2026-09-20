@@ -193,7 +193,7 @@ Internal selectors and browser node IDs never appear in that YAML. They remain i
 
 ## Evals
 
-The repository includes outcome-based browser evaluations adapted from public Browserbase Stagehand fixtures.
+The repository includes outcome-based browser evaluations adapted from public Browserbase Stagehand fixtures, plus a fixed-answer smoke suite drawn from the official WebVoyager dataset.
 
 | Evaluation          | What it covers                   | Result |
 | ------------------- | -------------------------------- | :----: |
@@ -208,9 +208,12 @@ The repository includes outcome-based browser evaluations adapted from public Br
 
 Latest complete local run: **8/8 passed**. On that run, the bulk iframe form completed in **0.91s**, versus **7.41s** for five separate actions. These are observed timings, not guaranteed benchmarks.
 
+The latest WebVoyager golden smoke run passed **4/4** live tasks across Cambridge Dictionary, ArXiv, GitHub, and Wolfram Alpha. Each case requires exact evidence from the live page and a positive Jev `check()`. This is an integration gate using official tasks, not a score on the full 643-task benchmark.
+
 ```bash
 npm run eval:stagehand
 EVAL_FILTER=bulk npm run eval:stagehand
+npm run eval:webvoyager:golden
 ```
 
 ## Repository layout
@@ -227,6 +230,7 @@ playjev/
 │   └── types/          # public TypeScript contracts
 ├── docs/               # VitePress docs and landing page
 ├── evals/stagehand/    # public browser outcome evaluations
+├── evals/webvoyager/   # official fixed-answer golden smoke
 ├── examples/           # focused runnable examples
 └── tests/unit/         # deterministic unit tests
 ```
@@ -238,6 +242,7 @@ npm install
 npm run validate       # types, unit tests, package build, docs build
 npm run docs:dev       # local documentation site
 npm run eval:stagehand # live Jev + browser evaluations
+npm run eval:webvoyager:golden # official WebVoyager golden smoke
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the development workflow and [SECURITY.md](SECURITY.md) for private vulnerability reporting.

@@ -33,6 +33,8 @@ Set `PLAYJEV_DEBUG=true` to inspect candidate numbers, roles, names, scores, and
 
 The snapshot implementation currently depends on Chromium's DevTools Protocol. Use Chromium, Chrome, Edge, or another compatible Chromium build. Firefox and WebKit are not supported yet.
 
+Accessibility snapshots are bounded to 24 levels by default so ad-heavy and deeply nested pages cannot stall Chromium's unbounded tree traversal. Raise `snapshotMaxDepth` only when a required control is genuinely deeper.
+
 ## Secrets
 
 Keep `TYPESAFE_API_KEY` in your runtime secret manager. `.env` is ignored by the repository and must never be committed.

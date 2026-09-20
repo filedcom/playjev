@@ -44,14 +44,15 @@ const ACTIONABLE_ROLES = new Set([
   "treeitem",
 ]);
 
-export async function captureSnapshot(page: Page): Promise<BrowserSnapshot> {
+export async function captureSnapshot(page: Page, maxDepth = 24): Promise<BrowserSnapshot> {
   const session = await page.context().newCDPSession(page);
   try {
     await session.send("Accessibility.enable");
-    const response = (await session.send("Accessibility.getFullAXTree")) as {
+    const response = (await session.send("Accessibility.getFullAXTree", { depth: maxDepth })) as {
       nodes: AXNode[];
     };
     const snapshot = buildSnapshot(await page.url(), await page.title(), response.nodes);
+    await appendMainDocumentContent(page, snapshot);
     await appendChildFrameControls(page, snapshot);
     return snapshot;
   } finally {
@@ -188,6 +189,7 @@ function isContextRole(role: string): boolean {
     "navigation",
     "main",
     "article",
+    "image",
     "region",
     "table",
     "dialog",
@@ -209,103 +211,189 @@ interface FrameControl {
   expanded?: boolean;
 }
 
+interface DocumentContent {
+  role: "heading" | "paragraph" | "listitem";
+  text: string;
+}
+
+async function appendMainDocumentContent(page: Page, snapshot: BrowserSnapshot): Promise<void> {
+  const content = await page
+    .evaluate((): DocumentContent[] => {
+      const scope = document.querySelector("main, article, [role='main']") ?? document.body;
+      const elements = [...scope.querySelectorAll("h1, h2, h3, h4, p, li, dt, dd, div, span")];
+      const seen = new Set<string>();
+      const results: DocumentContent[] = [];
+      for (const element of elements) {
+        const tag = element.tagName.toLowerCase();
+        const semantic = /^(h[1-4]|p|li|dt|dd)$/.test(tag);
+        if (!semantic && element.children.length > 8) continue;
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        if (
+          style.visibility === "hidden" ||
+          style.display === "none" ||
+          rect.width <= 0 ||
+          rect.height <= 0
+        ) {
+          continue;
+        }
+        const text = (element as HTMLElement).innerText.replace(/\s+/g, " ").trim();
+        if (text.length < 2 || text.length > 500 || seen.has(text)) continue;
+        seen.add(text);
+        results.push({
+          role: /^h[1-4]$/.test(tag) ? "heading" : tag === "li" ? "listitem" : "paragraph",
+          text,
+        });
+        if (results.length >= 400) break;
+      }
+      return results;
+    })
+    .catch(() => [] as DocumentContent[]);
+
+  const existingText = new Set(
+    snapshot.modelTree
+      .map((node) => node.text?.replace(/\s+/g, " ").trim())
+      .filter((value): value is string => !!value),
+  );
+  const unique = content.filter(({ text }) => !existingText.has(text));
+  if (unique.length === 0) return;
+
+  const rootId = "normalized-document-content";
+  const root: BrowserNode = {
+    id: rootId,
+    axId: rootId,
+    role: "main",
+    name: "Normalized visible document content",
+    children: [],
+  };
+  snapshot.tree.push(root);
+  snapshot.byId.set(root.id, root);
+  unique.forEach((entry, index) => {
+    const id = `document-content:${index}`;
+    const node: BrowserNode = {
+      id,
+      axId: id,
+      parentId: rootId,
+      role: entry.role,
+      name: entry.text,
+      children: [],
+    };
+    root.children.push(node);
+    snapshot.byId.set(id, node);
+  });
+  rebuildModelTree(snapshot);
+}
+
+const MAX_CHILD_FRAMES = 32;
+const FRAME_CAPTURE_TIMEOUT_MS = 750;
+
 async function appendChildFrameControls(page: Page, snapshot: BrowserSnapshot): Promise<void> {
   const childFrames = page.frames().filter((frame) => frame !== page.mainFrame());
-  for (let frameIndex = 0; frameIndex < childFrames.length; frameIndex++) {
-    const frame = childFrames[frameIndex]!;
-    const controls = await frame
-      .evaluate((): FrameControl[] => {
-        const elements = [
-          ...document.querySelectorAll(
-            'a[href], button, input, textarea, select, [role], [tabindex]:not([tabindex="-1"])',
-          ),
-        ];
-        return elements
-          .filter((element) => {
-            const style = getComputedStyle(element);
-            const rect = element.getBoundingClientRect();
-            return (
-              style.visibility !== "hidden" &&
-              style.display !== "none" &&
-              rect.width > 0 &&
-              rect.height > 0
-            );
-          })
-          .slice(0, 250)
-          .map((element) => {
-            const form = element as HTMLInputElement;
-            const anchor = element as HTMLAnchorElement;
-            const tag = element.tagName.toLowerCase();
-            const inputType = (element.getAttribute("type") ?? "text").toLowerCase();
-            const explicitRole = element.getAttribute("role");
-            let role = explicitRole ?? "generic";
-            if (!explicitRole) {
-              if (tag === "a") role = "link";
-              else if (tag === "button") role = "button";
-              else if (tag === "textarea") role = "textbox";
-              else if (tag === "select") role = "combobox";
-              else if (tag === "input") {
-                if (inputType === "checkbox") role = "checkbox";
-                else if (inputType === "radio") role = "radio";
-                else if (inputType === "range") role = "slider";
-                else if (inputType === "number") role = "spinbutton";
-                else if (["button", "submit", "reset"].includes(inputType)) role = "button";
-                else role = inputType === "search" ? "searchbox" : "textbox";
-              }
-            }
-            const label = form.labels?.[0]?.innerText;
-            const rawName =
-              element.getAttribute("aria-label") ??
-              label ??
-              element.getAttribute("placeholder") ??
-              element.getAttribute("title") ??
-              (element as HTMLElement).innerText ??
-              element.getAttribute("name") ??
-              undefined;
-            const name = rawName?.replace(/\s+/g, " ").trim() || undefined;
-            const parts: string[] = [];
-            let current: Element | null = element;
-            if (current.id) {
-              parts.push(`#${CSS.escape(current.id)}`);
-            } else {
-              while (current) {
-                const currentTag = current.tagName.toLowerCase();
-                const parent: Element | null = current.parentElement;
-                if (!parent) {
-                  parts.unshift(currentTag);
-                  break;
+  const captures = await Promise.all(
+    childFrames.slice(0, MAX_CHILD_FRAMES).map(async (frame, frameIndex) => {
+      const evaluation = frame
+        .evaluate((): FrameControl[] => {
+          const elements = [
+            ...document.querySelectorAll(
+              'a[href], button, input, textarea, select, [role], [tabindex]:not([tabindex="-1"])',
+            ),
+          ];
+          return elements
+            .filter((element) => {
+              const style = getComputedStyle(element);
+              const rect = element.getBoundingClientRect();
+              return (
+                style.visibility !== "hidden" &&
+                style.display !== "none" &&
+                rect.width > 0 &&
+                rect.height > 0
+              );
+            })
+            .slice(0, 250)
+            .map((element) => {
+              const form = element as HTMLInputElement;
+              const anchor = element as HTMLAnchorElement;
+              const tag = element.tagName.toLowerCase();
+              const inputType = (element.getAttribute("type") ?? "text").toLowerCase();
+              const explicitRole = element.getAttribute("role");
+              let role = explicitRole ?? "generic";
+              if (!explicitRole) {
+                if (tag === "a") role = "link";
+                else if (tag === "button") role = "button";
+                else if (tag === "textarea") role = "textbox";
+                else if (tag === "select") role = "combobox";
+                else if (tag === "input") {
+                  if (inputType === "checkbox") role = "checkbox";
+                  else if (inputType === "radio") role = "radio";
+                  else if (inputType === "range") role = "slider";
+                  else if (inputType === "number") role = "spinbutton";
+                  else if (["button", "submit", "reset"].includes(inputType)) role = "button";
+                  else role = inputType === "search" ? "searchbox" : "textbox";
                 }
-                const siblings = [...parent.children].filter(
-                  (sibling) => sibling.tagName === current!.tagName,
-                );
-                parts.unshift(`${currentTag}:nth-of-type(${siblings.indexOf(current) + 1})`);
-                current = parent;
               }
-            }
-            return {
-              selector: parts.join(" > "),
-              role,
-              ...(name ? { name } : {}),
-              ...(typeof form.value === "string" && form.value ? { value: form.value } : {}),
-              ...(anchor.href ? { url: anchor.href } : {}),
-              ...(form.disabled ? { disabled: true } : {}),
-              ...(typeof form.checked === "boolean" ? { checked: form.checked } : {}),
-              ...(element.hasAttribute("aria-expanded")
-                ? { expanded: element.getAttribute("aria-expanded") === "true" }
-                : {}),
-            };
-          });
-      })
-      .catch((error) => {
-        if (process.env.PLAYJEV_DEBUG === "true") {
-          console.error(
-            `[playjev] unable to normalize child frame ${frame.url() || "about:blank"}`,
-            error,
-          );
-        }
-        return [] as FrameControl[];
-      });
+              const label = form.labels?.[0]?.innerText;
+              const rawName =
+                element.getAttribute("aria-label") ??
+                label ??
+                element.getAttribute("placeholder") ??
+                element.getAttribute("title") ??
+                (element as HTMLElement).innerText ??
+                element.getAttribute("name") ??
+                undefined;
+              const name = rawName?.replace(/\s+/g, " ").trim() || undefined;
+              const parts: string[] = [];
+              let current: Element | null = element;
+              if (current.id) {
+                parts.push(`#${CSS.escape(current.id)}`);
+              } else {
+                while (current) {
+                  const currentTag = current.tagName.toLowerCase();
+                  const parent: Element | null = current.parentElement;
+                  if (!parent) {
+                    parts.unshift(currentTag);
+                    break;
+                  }
+                  const siblings = [...parent.children].filter(
+                    (sibling) => sibling.tagName === current!.tagName,
+                  );
+                  parts.unshift(`${currentTag}:nth-of-type(${siblings.indexOf(current) + 1})`);
+                  current = parent;
+                }
+              }
+              return {
+                selector: parts.join(" > "),
+                role,
+                ...(name ? { name } : {}),
+                ...(typeof form.value === "string" && form.value ? { value: form.value } : {}),
+                ...(anchor.href ? { url: anchor.href } : {}),
+                ...(form.disabled ? { disabled: true } : {}),
+                ...(typeof form.checked === "boolean" ? { checked: form.checked } : {}),
+                ...(element.hasAttribute("aria-expanded")
+                  ? { expanded: element.getAttribute("aria-expanded") === "true" }
+                  : {}),
+              };
+            });
+        })
+        .catch((error) => {
+          if (process.env.PLAYJEV_DEBUG === "true") {
+            console.error(
+              `[playjev] unable to normalize child frame ${frame.url() || "about:blank"}`,
+              error,
+            );
+          }
+          return [] as FrameControl[];
+        });
 
+      const controls = await withDeadline(
+        evaluation,
+        FRAME_CAPTURE_TIMEOUT_MS,
+        [] as FrameControl[],
+      );
+      return { frame, frameIndex, controls };
+    }),
+  );
+
+  for (const { frame, frameIndex, controls } of captures) {
     if (controls.length === 0) continue;
     const frameUrl = frame.url();
     const rootAxId = `frame-root:${frameIndex}`;
@@ -345,13 +433,27 @@ async function appendChildFrameControls(page: Page, snapshot: BrowserSnapshot): 
     });
   }
 
-  if (childFrames.length > 0) {
-    const rebuilt = buildModelTree(snapshot.tree, snapshot.byId);
-    snapshot.modelTree = rebuilt.modelTree;
-    snapshot.byNumber = rebuilt.byNumber;
-    snapshot.numberById = rebuilt.numberById;
-    snapshot.formattedTree = formatForest(snapshot.tree);
+  if (captures.some(({ controls }) => controls.length > 0)) {
+    rebuildModelTree(snapshot);
   }
+}
+
+function rebuildModelTree(snapshot: BrowserSnapshot): void {
+  const rebuilt = buildModelTree(snapshot.tree, snapshot.byId);
+  snapshot.modelTree = rebuilt.modelTree;
+  snapshot.byNumber = rebuilt.byNumber;
+  snapshot.numberById = rebuilt.numberById;
+  snapshot.formattedTree = formatForest(snapshot.tree);
+}
+
+function withDeadline<T>(promise: Promise<T>, timeoutMs: number, timeoutValue: T): Promise<T> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => resolve(timeoutValue), timeoutMs);
+    promise.then((value) => {
+      clearTimeout(timeout);
+      resolve(value);
+    });
+  });
 }
 
 function normalizeRole(role: string): string {

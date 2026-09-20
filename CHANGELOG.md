@@ -13,4 +13,6 @@ All notable changes to PlayJev will be documented here. The project follows Sema
 - Shadow DOM and cross-origin iframe targeting.
 - Bulk form filling with one batched target-selection request.
 - Public Stagehand fixture evaluation suite.
+- Official WebVoyager fixed-answer golden smoke suite.
+- Bounded accessibility capture with normalized visible document text and parallel iframe capture.
 - VitePress documentation and landing site.

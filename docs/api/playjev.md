@@ -30,6 +30,7 @@ const page = playjev(await browser.newPage(), {
 | `baseUrl`             | `string` | `https://api.typesafe.ai/v1` | Jev API base URL                |
 | `requestTimeoutMs`    | `number` | `30000`                      | Timeout per API attempt         |
 | `maxRetries`          | `number` | `2`                          | Transient request retries       |
+| `snapshotMaxDepth`    | `number` | `24`                         | Accessibility snapshot depth    |
 | `minTargetConfidence` | `number` | `0.55`                       | Default action target threshold |
 
 ## Errors

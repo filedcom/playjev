@@ -3,6 +3,7 @@ dist/
 .env
 playwright-report/
 test-results/
+eval-results/
 .browser-profile/
 .DS_Store
 *.tgz
