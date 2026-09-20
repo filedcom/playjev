@@ -1,0 +1,24 @@
+name: Feature request
+description: Propose a focused improvement
+title: "[feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Browser automation problem
+      description: What cannot be expressed reliably with the current API?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: How does this preserve bounded Jev decisions?
+    validations:
+      required: true

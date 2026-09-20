@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "types": ["node", "vitepress/client", "vitest/globals"]
+  },
+  "include": [
+    "examples/**/*.ts",
+    "evals/**/*.ts",
+    "tests/**/*.ts",
+    "docs/.vitepress/**/*.ts",
+    "docs/**/*.d.ts"
+  ]
+}

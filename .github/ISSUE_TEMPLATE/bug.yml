@@ -1,0 +1,34 @@
+name: Bug report
+description: Report reproducible incorrect PlayJev behavior
+title: "[bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include API keys or sensitive page data.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the expected and actual browser outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      render: typescript
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: PlayJev version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Node, Playwright, browser, and operating system
+    validations:
+      required: true

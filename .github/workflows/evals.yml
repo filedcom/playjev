@@ -1,0 +1,29 @@
+name: Live browser evals
+
+on:
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: Optional case-name filter
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  stagehand-fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
+      EVAL_FILTER: ${{ inputs.filter }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run eval:stagehand

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+playwright-report/
+test-results/
+.browser-profile/
+.DS_Store
+*.tgz
+docs/.vitepress/cache/
+docs/.vitepress/dist/

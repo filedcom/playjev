@@ -1,0 +1,80 @@
+{
+  "name": "playjev",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Fast, typed browser automation powered by Jev and Playwright.",
+  "license": "MIT",
+  "author": "Atul <a7ul>",
+  "homepage": "https://a7ul.github.io/playjev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a7ul/playjev.git"
+  },
+  "bugs": {
+    "url": "https://github.com/a7ul/playjev/issues"
+  },
+  "keywords": [
+    "browser-automation",
+    "playwright",
+    "jev",
+    "typesafe-ai",
+    "web-automation",
+    "agent"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.tools.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "npm run format:check && npm run check && npm test && npm run build && npm run docs:build",
+    "prepare": "npm run build",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "example": "node --env-file=.env --import tsx examples/basics/quickstart.ts",
+    "example:public": "node --env-file=.env --import tsx examples/basics/public-complex.ts",
+    "research:global-warming": "node --env-file=.env --import tsx examples/research/global-warming.ts",
+    "research:global-warming:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx examples/research/global-warming.ts",
+    "example:deep-topic:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx examples/research/topic-deep-dive.ts",
+    "eval:stagehand": "node --env-file=.env --import tsx evals/stagehand/public-act.ts",
+    "eval:stagehand:headed": "HEADED=true node --env-file=.env --import tsx evals/stagehand/public-act.ts",
+    "eval:stagehand:reuse": "PLAYJEV_CDP_URL=http://127.0.0.1:9222 HEADED=true node --env-file=.env --import tsx evals/stagehand/public-act.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.8.1"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.50.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "playwright": "^1.55.0",
+    "prettier": "^3.9.8",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vitepress": "^2.0.0-alpha.20",
+    "vitest": "^5.0.1"
+  }
+}
