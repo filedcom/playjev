@@ -2,7 +2,7 @@
 
 <h1 align="center">PlayJev</h1>
 
-<p align="center"><strong>Browser control with decisions, not generation.</strong><br />A Playwright extension powered by Jev's bounded Score, Choice, and Noul primitives.</p>
+<p align="center"><strong>Stagehand, but with Jev.</strong><br />Browser control with decisions, not generation—a Playwright extension powered by Jev's bounded Score, Choice, and Noul primitives.</p>
 
 <p align="center">
   <a href="https://github.com/filedcom/playjev/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/filedcom/playjev/actions/workflows/ci.yml/badge.svg" /></a>
@@ -34,7 +34,7 @@ PlayJev keeps the browser automation model simple: **Playwright owns execution; 
 
 ## Install
 
-Until an npm release is published, authorized repository users can install directly from GitHub:
+Until an npm release is published, install directly from GitHub:
 
 ```bash
 npm install github:filedcom/playjev playwright
