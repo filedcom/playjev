@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="PlayJev">
-  <defs><linearGradient id="g" x1="18" y1="14" x2="112" y2="116" gradientUnits="userSpaceOnUse"><stop stop-color="#927fff"/><stop offset="1" stop-color="#4c36e8"/></linearGradient></defs>
-  <rect width="128" height="128" rx="30" fill="url(#g)"/>
-  <path d="M38 32h31c22 0 35 12 35 31S91 94 69 94H55v14H38V32Zm17 16v30h14c11 0 18-5 18-15S80 48 69 48H55Z" fill="white"/>
-  <circle cx="96" cy="31" r="10" fill="#c9ff57"/>
-</svg>

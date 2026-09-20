@@ -7,8 +7,8 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   head: [
-    ["link", { rel: "icon", href: "/playjev/playjev-mark.svg" }],
-    ["meta", { name: "theme-color", content: "#6f5cff" }],
+    ["link", { rel: "icon", type: "image/png", href: "/playjev/playjev-golden-logo.png" }],
+    ["meta", { name: "theme-color", content: "#f5a623" }],
     [
       "meta",
       {
@@ -25,7 +25,7 @@ export default defineConfig({
     ],
   ],
   themeConfig: {
-    logo: "/playjev/playjev-mark.svg",
+    logo: "/playjev/playjev-golden-logo.png",
     siteTitle: "PlayJev",
     nav: [
       { text: "Guide", link: "/guide/getting-started" },

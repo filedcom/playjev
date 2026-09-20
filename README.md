@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/public/playjev-mark.svg" width="96" alt="PlayJev logo" /></p>
+<p align="center"><img src="docs/public/playjev-golden-logo.png" width="128" alt="PlayJev golden retriever logo" /></p>
 
 <h1 align="center">PlayJev</h1>
 
