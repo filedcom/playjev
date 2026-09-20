@@ -38,9 +38,9 @@ await page.check("Did the form submit successfully?");
 
 ## See it in action
 
-[![PlayJev running public browser automation evaluations](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo-poster.jpg)](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4)
+[![PlayJev running public browser automation evaluations](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.gif)](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4)
 
-The silent 48-second recording shows PlayJev running public Browserbase/Stagehand evaluation pages: selecting checkboxes, operating a custom dropdown, filling a cross-origin iframe form, and navigating across multiple pages. [Open the video directly](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4).
+The silent 48-second recording plays above and shows PlayJev running public Browserbase/Stagehand evaluation pages: selecting checkboxes, operating a custom dropdown, filling a cross-origin iframe form, and navigating across multiple pages. Click it or [open the video directly](https://github.com/filedcom/playjev/releases/download/demo-2026-09-20/playjev-browser-eval-demo.mp4) for the higher-quality MP4.
 
 ## Try it now
 
