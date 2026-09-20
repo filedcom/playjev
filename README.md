@@ -7,6 +7,7 @@
 <p align="center">
   <a href="https://github.com/filedcom/playjev/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/filedcom/playjev/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-6f5cff" /></a>
+  <img alt="Status: experimental" src="https://img.shields.io/badge/status-experimental-f5a623" />
   <img alt="Node 20+" src="https://img.shields.io/badge/node-%3E%3D20-c9ff57?labelColor=14121f" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6" />
 </p>
@@ -20,6 +21,8 @@
 
 ---
 
+PlayJev is a **new, experimental project** exploring a simple idea: can Jev's bounded decision primitives drive browser automation without asking a generative LLM to invent actions? The API and internals are actively evolving, so expect changes while the approach is tested against broader browser benchmarks.
+
 PlayJev keeps the browser automation model simple: **Playwright owns execution; Jev makes bounded decisions.** It compiles a live page into a sparse, numbered YAML tree, asks Jev to rank or choose among real browser nodes, performs an ordinary Playwright operation, and verifies the result against fresh state.
 
 - No raw HTML trees sent to Jev
@@ -30,30 +33,33 @@ PlayJev keeps the browser automation model simple: **Playwright owns execution; 
 - Bulk forms use one batched target-selection request and one verification
 
 > [!IMPORTANT]
-> PlayJev is an early TypeScript release. It currently requires Chromium/CDP and access to the TypeSafe Jev API. Review confidence thresholds before using it for destructive or externally visible actions.
+> PlayJev is not production-stable yet. It currently requires Chromium/CDP and access to the TypeSafe Jev API. Review confidence thresholds before using it for destructive or externally visible actions.
 
-## Install
+## Try it now
 
-Until an npm release is published, install directly from GitHub:
-
-```bash
-npm install github:filedcom/playjev playwright
-npx playwright install chromium
-```
-
-For local development:
+PlayJev is not published to npm yet. Clone the public repository and run its included example directly:
 
 ```bash
-git clone git@github.com:filedcom/playjev.git
+git clone https://github.com/filedcom/playjev.git
 cd playjev
 npm install
+npx playwright install chromium
 cp .env.example .env
 ```
 
-Add your TypeSafe key to `.env`:
+Open `.env`, set your TypeSafe Jev API key, then run:
 
 ```bash
-TYPESAFE_API_KEY=your-key
+npm run example
+```
+
+The example opens `example.com`, asks Jev to identify and follow the explanatory link, and verifies that the destination page loaded.
+
+To use PlayJev as a dependency before the npm release, install it from the public GitHub URL:
+
+```bash
+npm install https://github.com/filedcom/playjev.git playwright
+npx playwright install chromium
 ```
 
 ## Quickstart
