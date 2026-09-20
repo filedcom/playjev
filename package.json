@@ -5,7 +5,7 @@
   "description": "Fast, typed browser automation powered by Jev and Playwright.",
   "license": "MIT",
   "author": "Atul <a7ul>",
-  "homepage": "https://a7ul.github.io/playjev/",
+  "homepage": "https://github.com/a7ul/playjev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/a7ul/playjev.git"

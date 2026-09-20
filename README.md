@@ -12,10 +12,10 @@
 </p>
 
 <p align="center">
-  <a href="https://a7ul.github.io/playjev/">Documentation</a> ·
-  <a href="https://a7ul.github.io/playjev/guide/getting-started">Quickstart</a> ·
-  <a href="https://a7ul.github.io/playjev/api/playjev">API</a> ·
-  <a href="https://a7ul.github.io/playjev/evals/">Evals</a>
+  <a href="docs/guide/getting-started.md">Documentation</a> ·
+  <a href="docs/guide/getting-started.md">Quickstart</a> ·
+  <a href="docs/api/playjev.md">API</a> ·
+  <a href="docs/evals/index.md">Evals</a>
 </p>
 
 ---
