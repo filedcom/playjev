@@ -44,7 +44,7 @@ The silent 48-second recording shows PlayJev running public Browserbase/Stagehan
 
 ## Try it now
 
-PlayJev is not published to npm yet. Clone the public repository and run its included example directly:
+You need Node.js 20 or newer and a **TypeSafe Jev API key**. Sign in to the [TypeSafe console](https://console.typesafe.ai/login) to get access to Jev, then clone the public repository:
 
 ```bash
 git clone https://github.com/filedcom/playjev.git
@@ -54,7 +54,13 @@ npx playwright install chromium
 cp .env.example .env
 ```
 
-Open `.env`, set your TypeSafe Jev API key, then run:
+Open `.env` and set the required key:
+
+```bash
+TYPESAFE_API_KEY=your-key-here
+```
+
+Then run the included example:
 
 ```bash
 npm run example
