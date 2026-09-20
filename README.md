@@ -5,7 +5,7 @@
 <p align="center"><strong>Browser control with decisions, not generation.</strong><br />A Playwright extension powered by Jev's bounded Score, Choice, and Noul primitives.</p>
 
 <p align="center">
-  <a href="https://github.com/a7ul/playjev/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/a7ul/playjev/actions/workflows/ci.yml/badge.svg" /></a>
+  <a href="https://github.com/filedcom/playjev/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/filedcom/playjev/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-6f5cff" /></a>
   <img alt="Node 20+" src="https://img.shields.io/badge/node-%3E%3D20-c9ff57?labelColor=14121f" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178c6" />
@@ -37,14 +37,14 @@ PlayJev keeps the browser automation model simple: **Playwright owns execution; 
 Until an npm release is published, authorized repository users can install directly from GitHub:
 
 ```bash
-npm install github:a7ul/playjev playwright
+npm install github:filedcom/playjev playwright
 npx playwright install chromium
 ```
 
 For local development:
 
 ```bash
-git clone git@github.com:a7ul/playjev.git
+git clone git@github.com:filedcom/playjev.git
 cd playjev
 npm install
 cp .env.example .env

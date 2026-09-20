@@ -81,7 +81,7 @@
       </p>
       <div class="cta-links">
         <a href="./guide/getting-started">Read the quickstart</a
-        ><a class="secondary" href="https://github.com/a7ul/playjev">View on GitHub</a>
+        ><a class="secondary" href="https://github.com/filedcom/playjev">View on GitHub</a>
       </div>
     </section>
 

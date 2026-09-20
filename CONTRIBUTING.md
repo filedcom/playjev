@@ -5,7 +5,7 @@ Thanks for improving PlayJev. Keep changes small, typed, inspectable, and ground
 ## Development setup
 
 ```bash
-git clone git@github.com:a7ul/playjev.git
+git clone git@github.com:filedcom/playjev.git
 cd playjev
 npm install
 cp .env.example .env

@@ -11,7 +11,7 @@ PlayJev wraps an existing Playwright `Page`. It does not replace Playwright's br
 ## Install
 
 ```bash
-npm install github:a7ul/playjev playwright
+npm install github:filedcom/playjev playwright
 npx playwright install chromium
 ```
 

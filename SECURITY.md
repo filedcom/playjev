@@ -6,7 +6,7 @@ PlayJev is currently in an early `0.x` release. Security fixes are applied to th
 
 ## Reporting a vulnerability
 
-Do not open a public issue containing credentials, exploit details, or sensitive page data. Use GitHub's private vulnerability reporting for `a7ul/playjev`, or contact the repository owner privately through GitHub if that feature is unavailable.
+Do not open a public issue containing credentials, exploit details, or sensitive page data. Use GitHub's private vulnerability reporting for `filedcom/playjev`, or contact the repository maintainers privately through GitHub if that feature is unavailable.
 
 Include the affected version or commit, reproduction steps, impact, and any proposed mitigation. You should receive an acknowledgement within seven days.
 

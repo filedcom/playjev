@@ -32,7 +32,7 @@ export default defineConfig({
       { text: "API", link: "/api/playjev" },
       { text: "Evals", link: "/evals/" },
       { text: "Architecture", link: "/guide/architecture" },
-      { text: "GitHub", link: "https://github.com/a7ul/playjev" },
+      { text: "GitHub", link: "https://github.com/filedcom/playjev" },
     ],
     sidebar: {
       "/guide/": [
@@ -63,10 +63,10 @@ export default defineConfig({
         { text: "Evaluation suite", items: [{ text: "Results and methodology", link: "/evals/" }] },
       ],
     },
-    socialLinks: [{ icon: "github", link: "https://github.com/a7ul/playjev" }],
+    socialLinks: [{ icon: "github", link: "https://github.com/filedcom/playjev" }],
     search: { provider: "local" },
     editLink: {
-      pattern: "https://github.com/a7ul/playjev/edit/main/docs/:path",
+      pattern: "https://github.com/filedcom/playjev/edit/main/docs/:path",
       text: "Edit this page on GitHub",
     },
     footer: {

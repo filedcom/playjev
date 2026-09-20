@@ -5,13 +5,13 @@
   "description": "Fast, typed browser automation powered by Jev and Playwright.",
   "license": "MIT",
   "author": "Atul <a7ul>",
-  "homepage": "https://github.com/a7ul/playjev",
+  "homepage": "https://github.com/filedcom/playjev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/a7ul/playjev.git"
+    "url": "git+https://github.com/filedcom/playjev.git"
   },
   "bugs": {
-    "url": "https://github.com/a7ul/playjev/issues"
+    "url": "https://github.com/filedcom/playjev/issues"
   },
   "keywords": [
     "browser-automation",
